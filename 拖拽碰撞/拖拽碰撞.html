@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖拽碰撞</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #div1{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            left: 100px;
+            top: 200px;
+            border-radius: 50%;
+            box-shadow: 0 0 2px 3px red;
+        }
+        #div2{
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            position: absolute;
+            left: 200px;
+            top: 400px;
+            border-radius: 50%;
+            box-shadow: 0 0 2px 3px red;
+        }
+        #div3{
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            position: absolute;
+            left: 300px;
+            top: 100px;
+            border-radius: 50%;
+            box-shadow: 0 0 2px 3px red;
+        }
+        #div4{
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            position: absolute;
+            left: 400px;
+            top: 300px;
+            border-radius: 50%;
+            box-shadow: 0 0 2px 3px red;
+        }
+    </style>
+</head>
+<body>
+    <div id="div1"></div>
+    <div id="div2"></div>
+    <div id="div3"></div>
+    <div id="div4"></div>
+</body>
+    <script>
+ var div1 = document.getElementById("div1");
+//  var div2 = document.getElementById("div2");
+ var divs=document.querySelectorAll('div:nth-child(n+2)')
+//  console.log(divs)
+
+	div1.onmousedown = function (e) {
+        console.log(e.clientX)
+        console.log(e.offsetY)
+		var e = e || window.event
+
+
+		var offsetX = e.offsetX || e.clientX - this.offsetLeft
+		var offsetY = e.offsetY || e.clientY - this.offsetTop
+
+		document.onmousemove = function (e) {
+			var e = e || window.event
+            
+			div1.style.top = e.clientY - offsetY + "px"
+			div1.style.left = e.clientX - offsetX + "px"
+
+            for(var i=0;i<divs.length;i++){
+                var obj=divs[i];
+                if(carsh(div1,obj)){
+                    // console.log(1)
+                    console.log(obj)
+                    console.log(this)
+                    obj.style.background='blue'
+                }else{
+                    obj.style.background='yellow'
+                }
+            }
+
+            
+				//碰撞检测
+                function carsh(obj1,obj2){
+                var L1 = obj1.offsetLeft;
+				var R1 = L1 + obj1.offsetWidth;
+				var T1 = obj1.offsetTop;
+				var B1 = T1 + obj1.offsetHeight;
+				
+				var L2 = obj2.offsetLeft;
+				var R2 = L2 + obj2.offsetWidth;
+				var T2 = obj2.offsetTop;
+				var B2 = T2 + obj2.offsetHeight;
+
+            
+				
+				//没有碰撞的时候
+				if(R1 < L2 || B1 < T2 || L1 > R2 || T1 > B2){
+					//碰不到
+					// div2.style.backgroundColor = 'yellow';
+                    return false;
+				}else{
+					// div2.style.backgroundColor = 'pink';
+                    return true;
+				}
+                }
+				
+              
+
+		}
+
+		document.onmouseup = function () {
+			document.onmousemove = null
+		}
+	}
+
+    </script>
+
+
+</html>
