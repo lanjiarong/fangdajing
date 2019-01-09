@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>放大镜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        /* html {
+            height: 2000px;
+            width: 3000px
+        } */
+
+        .container {
+            width: 1000px;
+            margin: 0 auto
+        }
+
+        .box {
+            width: 352px;
+            position: relative;
+        }
+
+        .left {
+            width: 350px;
+            height: 350px;
+            border: 1px solid #aaa;
+            position: relative;
+        }
+
+        .slider {
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none
+        }
+
+
+
+        .right {
+            width: 450px;
+            height: 450px;
+            border: 1px solid #aaa;
+            overflow: hidden;
+            position: absolute;
+            left: 352px;
+            top: 0;
+            display: none
+        }
+
+        .right img {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="left">
+                <img src="./img/xiao.jpg" alt="">
+                <div class="slider"></div>
+            </div>
+            <div class="right">
+                <img src="./img/6ad38c9bf232b7d5.jpg" alt="">
+            </div>
+        </div>
+
+
+
+    </div>
+</body>
+<script>
+    // var scrollTop = 0, scrollLeft = 0
+    // window.onscroll = function () {
+
+    //     scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+    //     scrollLeft = document.body.scrollLeft || document.documentElement.scrollLeft
+
+    //    console.log(scrollTop,scrollLeft )
+    // }
+
+
+    //1. 遮罩的移动
+
+
+    var box = document.querySelector(".box");
+    var left = document.querySelector(".left");
+    var slider = document.querySelector(".slider");
+
+    var right = document.querySelector(".right")
+    var rightImg = document.querySelector(".right img")
+
+
+    // window.scrollTo(0, 100)
+    left.onmouseover = function () {
+        slider.style.display = "block"
+        right.style.display = "block"
+    }
+    left.onmousemove = function (ev) {
+        var ev = ev || window.event;
+
+
+        // var x = ev.pageX || ev.clientX + scrollTop
+        // var y = ev.pageY || ev.clientY + scrollTop
+
+        var offsetX = ev.pageX - box.offsetLeft - left.clientLeft - slider.offsetWidth / 2;
+
+        var offsetY = ev.pageY - box.offsetTop - left.clientTop - slider.offsetHeight / 2;
+        offsetX = offsetX <= 0 ? 0 : offsetX
+
+        offsetY = offsetY <= 0 ? 0 : offsetY
+
+        var maxX = left.clientWidth - slider.offsetWidth
+        var maxY = left.clientHeight - slider.offsetHeight
+
+
+        offsetX = offsetX >= maxX ? maxX : offsetX
+        offsetY = offsetY >= maxY ? maxY : offsetY
+
+        console.log(ev.offsetX)
+        console.log(ev.clientX - box.offsetLeft - left.clientLeft)
+
+        slider.style.left = offsetX + "px"
+        slider.style.top = offsetY + "px"
+
+
+        var biliX = (rightImg.offsetWidth - right.clientWidth) / (left.clientWidth - slider.offsetWidth)
+        var biliY = (rightImg.offsetHeight - right.clientHeight) / (left.clientHeight - slider.offsetHeight)
+
+        rightImg.style.left = -biliX * offsetX + "px"
+        rightImg.style.top = -biliY * offsetY + "px"
+
+
+
+
+
+
+        // console.log(ev.offsetY)
+    }
+
+
+    left.onmouseout = function () {
+        slider.style.display = "none"
+        right.style.display = "none"
+
+    }
+</script>
+</html>
