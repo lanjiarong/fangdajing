@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        ol,
+        ul {
+            list-style: none
+        }
+
+        .banner {
+            width: 590px;
+            height: 470px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .banner ul {
+            width: 500%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* transition: all 1s */
+        }
+
+        .banner ul li {
+            float: left;
+        }
+
+
+
+        .banner>a {
+            display: block;
+            width: 35px;
+            height: 120px;
+            line-height: 120px;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            font-family: "宋体";
+            background: rgba(0, 0, 0, 0.5);
+            font-size: 30px;
+            z-index: 999;
+            position: absolute;
+            top: 50%;
+            margin-top: -60px;
+        }
+
+        .banner>a.prev {
+            left: 0;
+            /* display: none */
+
+        }
+
+        .banner>a.next {
+            right: 0;
+            /* display: none */
+
+        }
+
+        ol {
+            position: absolute;
+            z-index: 999;
+            bottom: 10px;
+            width: 44px;
+            margin: auto;
+            left: 0;
+            right: 0;
+        }
+
+        ol li {
+            float: left;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #fff;
+            background: transparent;
+            font-size: 0;
+            border-radius: 50%;
+            margin: 0 5px;
+            box-sizing: border-box
+        }
+
+        ol li.hover {
+            background: #fff
+        }
+    </style>
+
+    
+</head>
+
+<body>
+    <div class="banner">
+        <ul>
+            <li class="active"><a href="#"><img src="https://m.360buyimg.com/babel/jfs/t1/16367/29/3140/101322/5c24953eE3615e42b/d9f949ed9d1af604.jpg"
+                        alt=""></a></li>
+            <li><a href="#"><img src="https://img1.360buyimg.com/pop/jfs/t1/19967/14/3531/102982/5c276d46Ee0ca98b7/54e17a557e29ff01.jpg"
+                        alt=""></a></li>
+            <li><a href="#"><img src="https://img11.360buyimg.com/da/jfs/t16663/131/1424030023/110119/f5bc9082/5acb3b19Nc3efd8d0.jpg"
+                        alt=""></a></li>
+            <li><a href="#"><img src="https://img1.360buyimg.com/pop/jfs/t1/23986/19/3155/82711/5c2491a4E6d9e197c/f0142ea62a87c479.jpg"
+                        alt=""></a></li>
+           
+
+        </ul>
+        <ol>
+        </ol>
+        <a href="javascript:;" class="prev">
+            <</a> <a href="javascript:;" class="next">>
+        </a>
+    </div>
+</body>
+    <script>
+       
+
+            //1. ol 添加元素
+            
+            var ulLi = document.querySelectorAll("ul li");
+
+            var bannerWidth=document.querySelector('.banner').offsetWidth
+            var ul=document.querySelector('ul')
+            var ol = document.querySelector("ol")
+            var banner = document.querySelector(".banner")
+            
+            
+            var prev = document.querySelector('.prev')
+            var next = document.querySelector('.next')
+
+
+
+            var timer = null
+           
+            for (var i = 0; i < ulLi.length; i++) {
+                var olLi = document.createElement("li");
+                olLi.textContent = i;
+                ol.appendChild(olLi)
+            }
+            ol.style.width = 22 * ulLi.length + "px"
+            var olLis = document.querySelectorAll("ol li");
+            olLis[0].classList.add("hover")
+
+            olLis.forEach(function(el,i){
+                el.onmouseover=function(){
+                    oindex=index=i
+                    // console.log(bannerWidth)
+                    animate(ul,-index*bannerWidth)
+                    for(var j=0;j<olLis.length-1;j++) olLis[j].classList.remove('hover')
+                olLis[oindex].classList.add('hover')
+                }
+            })
+
+    //缓动！！！！！！！！！！！！！！
+            function animate(ele,target){
+                var speed= ele.offsetLeft-target>0 ?-10:10 
+                clearInterval(ele.timer)
+                ele.timer=setInterval(function(){
+                    // console.log(ele.offsetLeft)
+                    // console.log(target)
+                    ele.style.left=speed+ele.offsetLeft+'px' 
+                    var value=target-ele.offsetLeft
+                    if(Math.abs(value)<=Math.abs(speed)){
+                        ele.style.left=target+'px';
+                        clearInterval(ele.timer)
+                    } 
+                },10)    
+            }
+            
+            //左右按钮
+         var index=0,oindex=0;
+         
+            next.onclick=function(){
+                index++
+                oindex++
+                if(index>ulLi.length-1){
+                    ul.style.left=0;
+                    index=1;
+                }
+                
+                if(oindex>olLis.length-1){
+                    oindex=0
+                }
+
+                animate(ul,-index*bannerWidth)
+
+                for(var i=0;i<olLis.length-1;i++) olLis[i].classList.remove('hover')
+                olLis[oindex].classList.add('hover')
+
+                
+
+            }
+            prev.onclick=function(){
+                index--
+                oindex--
+                if(index<0){
+                    ul.style.left=-bannerWidth*(ulLi.length-1)+'px';
+                    index=ulLi.length-1
+                }
+                if(oindex<0){
+                    oindex=olLis.length-1
+                }
+
+                animate(ul,-index*bannerWidth)
+    
+                for(var i=0;i<olLis.length-1;i++) olLis[i].classList.remove('hover')
+                olLis[index].classList.add('hover')
+            }
+
+        </script>
+</body>
+</html>
